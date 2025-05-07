@@ -1,0 +1,50 @@
+1. For each loyal member who had placed at least one order, list the member's contact name and delivery address.
+There shouldn't be any duplicates in the result.
+Extra information: A loyal member is defined as someone who has never cancelled their membership with the Food Sharing Program. 
+In other words, their status is still 'Active' and their sign up date and activation date remain the same.
+
+LoyalMember(contactName, deliveryAddress) ::= MemberAccounts(accnum, contactName, _, deliveryAddress, date, date, 'Active')
+                                              and Orders(_, accnum, _, _, _, _, _, _)
+
+2. For each order that received (and accepted presumably because the data is in the database now) a wrong sized package 
+(i.e., the package size demanded by the order is different from the size of the package delivered), list the contact name and delivery address of the member who 
+placed the order, and the delivered package's batch barcode and package size, and the delivery date.
+
+WrongDelivery(contactName, deliveryAddress, barcode, sizeType, deliverTime) ::= MemberAccounts(accnum, contactName, _, deliveryAddress, _, _, _)
+                                                                                and Orders(_, accnum, _, packageType, _, deliverTime, barcode, _)
+                                                                                and Batches(barcode, _, sizeType)
+                                                                                and sizeType != packageType and deliverTime is not null
+
+3. List the contact name, email and delivery address of each member whose status is 'Active' now, but who never placed any order in year 2024.
+There shouldn't be any duplicates in the result.
+
+Helper subquery:
+OrderedIn2024(_, accnum, _, _, _, _, _, _) ::= MemberAccounts(accnum, _, _, _, _, _, 'Active')
+                                               and Orders(_, accnum, placeTime, _, _, _, _, _) 
+                                               and placeTime >= '01-Jan-24' and placeTime <= '31-Dec-24'
+
+No2024Orders(contactName, email, deliveryAddress) ::= MemberAccounts(accnum, contactName, email, deliveryAddress, _, _, 'Active'),
+                                                      NOT (OrderedIn2024(accnum))
+
+4. List the contact name, email and farm address of each producer who supplied some food item that's not broccoli to the Food Sharing Program in 2024. 
+Broccoli's name is stored as 'Broccoli' in FoodItems table. There shouldn't be any duplicates in the result.
+
+NonBroccoliSupplier(contactName, email, farmAddress) ::= Producers(accnum, farmAddress)
+                                                         and MemberAccounts(accnum, contactName, email, _, _, _, _)
+                                                         and SupplyRecords(accnum, productCode, supplyDate, _)
+                                                         and supplyDate >= '01-Jan-24' and supplyDate <= '31-Dec-24'
+                                                         and NOT (FoodItems(productCode, 'Broccoli', _))
+
+5. List the contact name, email and farm address of each producer who never supplied any broccoli to the Food Sharing Program in 2024. Broccoli's name 
+is stored as 'Broccoli' in FoodItems table.
+
+Helper subquery:
+BroccoliSupplied2024(accnum) ::= Producers(accnum, _)
+                            and SupplyRecords(accnum, productCode, supplyDate, _)
+                            and FoodItems(productCode, 'Broccoli', _)
+                            and supplyDate >= '01-Jan-24' and supplyDate <= '31-Dec-24'
+
+NonBroccoliSupplier(contactName, email, farmAddress) ::= Producers(accnum, farmAddress)
+                                                         and MemberAccounts(accnum, contactName, email, _, _, _, _)
+                                                         and NOT (BroccoliSupplied2024(accnum))
+                                                        

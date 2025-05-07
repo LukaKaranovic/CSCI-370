@@ -1,0 +1,2 @@
+I am assuming that a member can only order MULTIPLE packages in ONE order, making the 'delivered' relationship set a many-to-one relationship (underconstrained).
+If a member could only order ONE packages per order, it would be one-to-one (overconstrained).

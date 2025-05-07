@@ -1,0 +1,21 @@
+Summary report of year 2024
+
+Account Number:   000001
+Contact Name:     John Doe
+Delivery Address: 123 Green St, Cityville
+Current Status:   Active
+
+Order history of year 2024: 
+Package Size     Amount Ordered
+------------     --------------
+
+This member is also a producer.
+Farm Address:   789 Farm Ln, Ruraltown
+
+Contribution history of year 2024:
+Product Code       Food Item Name       Unit       Total Amount
+------------       --------------       ----       -----------
+1002               Carrots              gram       50        
+1001               Broccoli             quantity   10500     
+
+====== END OF REPORT ======

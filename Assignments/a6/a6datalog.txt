@@ -1,0 +1,20 @@
+
+a. For each active member (whose status is 'Active'), list their contact name and email, and the order number and package type of their latest placed order 
+(whose place time is the largest).
+
+OldestActiveOrder(name, email, orderNum, packageType) ::= MemberAccounts(accnum, name, email, _, _, _, 'Active')
+                                                        and Orders(orderNum, accnum, placeTime, packageType, _, _, _, _)
+                                                        and NOT (Orders(orderNum2, accnum, placeTime2, _, _, _, _)
+                                                        and placetime2 > placeTime)
+
+b. List the contact name, email and farm address of each producer who is capable of supply EVERY food item. A producer is considered to be able to supply every 
+food item if this producer had supplied every food item in the FoodItems table before.
+
+BadProducers(accnum) ::= MemberAccounts(accnum, name, email, _, _, _, _)
+                         and Producers(accnum, farmAddress)
+                         and FoodItems(pc, _, _)
+                         and NOT SupplyRecords(accnum, pc, _, _)
+
+GoodProducers(name, email, farmAddress) ::= MemberAccounts(accnum, name, email, _, _, _, _)
+                                        and Producers(accnum, farmAddress)
+                                        and NOT BadProducers(accnum)

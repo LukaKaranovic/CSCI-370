@@ -1,0 +1,28 @@
+1. List each member's name, email and delivery address;
+
+MemberInfo(contactName, email, deliveryAddress) ::= MemberAccounts(_, contactName, email, deliveryAddress, _, _, _)
+
+2. List each producer's name, delivery address and farm address;
+
+ProducerInfo(contactName, deliveryAddress, farmAddress) ::= MemberAccounts(accnum, contactName, _, deliveryAddress, _, _, _)
+                                                        and Producers(accnum, farmAddress)
+
+3. For each member whose delivery address contains "Nanaimo" and signed up to the program before March 15th, 2020, 
+list the member's contact name, delivery address and current status.
+
+NanaimoAndOldUser(contactName, deliveryAddress, status) ::= MemberAccounts(_, contactName, _ , deliveryAddress, signUpDate, _, status)
+                                                        and deliveryAddress like '%Nanaimo%' and signUpDate < '15-Mar-20'
+
+4. For each unsatisfied order (i.e., their delivery time is still null) placed by any food producer, 
+list the order's place time, expected delivery time, and the contact name of the member who placed the order.
+
+UnsatisfiedOrders(placeTime, expectedDate, contactName) ::= Orders(_, placedBy, _, _, expectDate, NULL, _, _)
+                                                        and MemberAccounts(placedBy, contactName, _, _, _, _, _)'
+                                                        and Producers(placedBy, _)
+    
+5. For each member who placed at least one order whose expected delivery time is in November 2024, 
+list that member's account number, contact name and delivery address. There shouldn't be duplicates in the result.
+
+OrderExpectedNov2024(accnum, contactName, deliveryAddress) ::= Orders (_, accnum, _, _, expectDate, _, _, _)
+                                                           and expectDate >= '01-Nov-24' and expectDate <= '30-Nov-24'
+                                                           and MemberAccounts(accnum, contactName, _, deliveryAddress, _, _, _)

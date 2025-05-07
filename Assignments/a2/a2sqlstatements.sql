@@ -1,0 +1,75 @@
+CREATE TABLE Members (
+    accNum char(6) primary key,
+    accName varchar(50),
+    email varchar(50),
+    activityStatus varchar(20) check (activityStatus IN ('inactive', 'active')),
+    signupDate date,
+    deliveryAddress varchar(150),
+    activationDate date
+);
+
+CREATE TABLE Producers (
+    accnum char(6) primary key,
+    farmAddress varchar(150),
+    foreign key(accnum) references Members(accnum)
+);
+
+CREATE TABLE Batches (
+    batchBarcode varchar(10) primary key,
+    packingTime date,
+    sizeType varchar(20) check (sizeType IN ('small', 'medium', 'large'))
+);
+
+CREATE TABLE Packages (
+    batchBarcode varchar(10),
+    packageNum number,
+    primary key(batchBarcode, packageNum),
+    foreign key(batchBarcode) references Batches(batchBarcode)
+);
+
+
+CREATE TABLE Orders (
+    orderID number primary key,
+    expectDate date,
+    packageType varchar(50) check (packageType IN ('small', 'medium', 'large')),
+    accnum char(6),
+    placeTime date,
+    batchBarcode varchar(10),
+    packageNum number,
+    deliverTime date,
+    foreign key(accnum) references Members(accnum),
+    foreign key(batchBarcode, packageNum) references Packages(batchBarcode, packageNum)
+);
+
+CREATE TABLE FoodItems (
+    productCode number primary key,
+    pname varchar(50),
+    unit varchar(20) check (unit IN ('gram', 'quantity'))
+);
+
+CREATE TABLE ProducersSupplyFood (
+    supplyDate date,
+    accnum char(6),
+    productCode number,
+    quantity number,
+    primary key(supplyDate, accnum, productCode),
+    foreign key(accnum)references Members(accnum),
+    foreign key(productCode) references FoodItems(productCode)
+);
+
+CREATE TABLE BatchContainsFood (
+    batchBarcode varchar(10) primary key,
+    productCode number,
+    quantity number,
+    foreign key(batchBarcode) references Batches(batchBarcode),
+    foreign key(productCode) references FoodItems(productCode)
+);
+
+DROP TABLE Members;
+DROP TABLE Producers;
+DROP TABLE Batches;
+DROP TABLE Packages;
+DROP TABLE Orders;
+DROP TABLE FoodItems;
+DROP TABLE ProducersSupplyFood;
+DROP TABLE BatchContainsFood;
